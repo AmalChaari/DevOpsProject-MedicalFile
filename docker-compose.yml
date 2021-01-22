@@ -1,0 +1,65 @@
+version: "3.9"
+
+volumes:
+  todo-mysql-data:
+    external: true
+
+networks:
+  default:
+    external:
+      name: network-devops
+
+services:
+  storemanagement:
+    container_name: storemanagement
+    image: storemanagement
+    ports:
+      - 8085:8085
+    networks:
+      default:
+        aliases:
+          - storemanagement
+    depends_on:
+      - storemanagementmysql
+  medicalfile:
+    container_name: medicalfile
+    image: medicalfile
+    ports:
+      - 8084:8084
+    networks:
+      default:
+        aliases:
+          - medicalfile
+    depends_on:
+      - medicalfilemysql
+  medicalfilemysql:
+    image: mysql:5.7
+    container_name: medicalfilemysql
+    ports:
+      - 8088:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=medicalfile
+    volumes:
+      - todo-mysql-data:/var/lib/medicalfilesql
+
+    networks:
+      default:
+        aliases:
+          - medicalfilemysql
+  storemanagementmysql:
+    image: mysql:5.7
+    container_name: storemanagementmysql
+    ports:
+      - 8089:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=storemanagement
+    volumes:
+      - todo-mysql-data:/var/lib/storemanagementsql
+
+    networks:
+      default:
+        aliases:
+          - storemanagementmysql
+
