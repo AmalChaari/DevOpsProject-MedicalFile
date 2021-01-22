@@ -41,7 +41,6 @@ public class DossierController {
     @PostMapping
     public DossierDto add(@Valid @RequestBody DossierDto dossierDto){
         this.logger.debug ("Add new Dossier {}",dossierDto);
-        Dossier dossier = new Dossier (PatientMapper.patientDtoToPatient (this.patientService.findOne (dossierDto.getPatientId ())));
         return this.dossierService.save (dossierDto);
     }
 
